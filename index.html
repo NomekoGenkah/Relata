@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NodeLife</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: #f0f0f0;
+      }
+      canvas {
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <input
+    type="text"
+    id="renameInput"
+    style="position: absolute; display: none; z-index: 10;"
+    placeholder="Enter new name"
+    />
+
+    <canvas id="nodeCanvas" width="800" height="600"></canvas>
+    <script src="renderer.js"></script>
+  </body>
+</html>
+
