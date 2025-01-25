@@ -1,6 +1,5 @@
 const fs = require('fs');
 
-//ss
 class NodeModel {
     constructor(x, y, label = '', overview = '', description = '', index) {
         this.x = x;
