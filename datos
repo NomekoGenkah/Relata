@@ -1,27 +1,29 @@
 {
   "nodes": [
     {
-      "x": 462,
-      "y": 476,
-      "label": "sd",
+      "x": 154,
+      "y": 210,
+      "label": "sdr",
       "overview": 0,
       "description": "23",
       "index": 0
     },
     {
-      "x": 295,
-      "y": 105,
-      "label": "sdsd",
+      "x": 464,
+      "y": 201,
+      "label": "svx",
       "overview": 1,
       "description": "asd23",
       "index": 1
+    },
+    {
+      "x": 294,
+      "y": 330,
+      "label": "caca",
+      "overview": "",
+      "description": "",
+      "index": 2
     }
   ],
-  "edges": [
-    {
-      "nodeA": 0,
-      "nodeB": 1,
-      "connection": ""
-    }
-  ]
+  "edges": []
 }

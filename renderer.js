@@ -2,7 +2,7 @@ const canvas = document.getElementById('nodeCanvas');
 const ctx = canvas.getContext('2d');
 const renameInput = document.getElementById('renameInput');
 const {GraphModel} = require('./model.js');
-const {selectEdge, isMouseNearEdge} = require('./edgeAux.js');
+const {selectEdge} = require('./edgeAux.js');
 
 model = new GraphModel();
 
@@ -30,8 +30,7 @@ function draw() {
     const nodeA = model.nodes[edge.nodeA];
     const nodeB = model.nodes[edge.nodeB];
 
-    //const nodeA = edge.nodeA;
-    //const nodeB = edge.nodeB;
+    ctx.strokeStyle = 'black';
 
     ctx.beginPath();
     ctx.moveTo(nodeA.x, nodeA.y);
@@ -40,6 +39,9 @@ function draw() {
   });
   // Draw nodes
   model.nodes.forEach((node) => {
+
+    ctx.strokeStyle = (node === selectedNode) ? 'white' : 'black';
+
     ctx.beginPath();
     ctx.arc(node.x, node.y, 50, 0, Math.PI * 2);
     ctx.fillStyle = 'green';
@@ -94,6 +96,7 @@ canvas.addEventListener('mousedown', (event) => {
   if(!selectedNode){
     selectedEdge = selectEdge(mouseX, mouseY, model.edges, model.nodes);
   }
+  draw();
 
 });
 
