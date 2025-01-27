@@ -1,13 +1,14 @@
 const fs = require('fs');
 
 class NodeModel {
-    constructor(x, y, label = '', overview = '', description = '', index) {
+    constructor(x, y, label = '', overview = '', description = '', color = 'green', index){
         this.x = x;
         this.y = y;
         this.label = label;
         this.overview = overview;
         this.description = description;
         this.index = index;
+        this.color = color;
     }
 }
 
@@ -25,8 +26,8 @@ class GraphModel {
         this.edges = [];
     }
 
-    addNode(x, y, label, description = '', overview = '', index = this.nodes.length) {
-        const newNode = new NodeModel(x, y, label, overview, description, index);
+    addNode(x, y, label, description = '', overview = '', color, index = this.nodes.length) {
+        const newNode = new NodeModel(x, y, label, overview, description, color, index);
         this.nodes.push(newNode);
     }
 
@@ -105,7 +106,7 @@ class GraphModel {
                 const graphData = JSON.parse(fs.readFileSync(filename, 'utf-8'));
                 if (Array.isArray(graphData.nodes) && Array.isArray(graphData.edges)) {
                     this.nodes = graphData.nodes.map(
-                        node => new NodeModel(node.x, node.y, node.label, node.overview, node.description, node.index)
+                        node => new NodeModel(node.x, node.y, node.label, node.overview, node.description, node.color, node.index)
                     );
                     this.edges = graphData.edges.map(
                         edge => new EdgeModel(edge.nodeA, edge.nodeB, edge.connection)
@@ -126,7 +127,7 @@ class GraphModel {
             const graphData = JSON.parse(jsonString);
             if (Array.isArray(graphData.nodes) && Array.isArray(graphData.edges)) {
                 this.nodes = graphData.nodes.map(
-                    node => new NodeModel(node.x, node.y, node.label, node.overview, node.description, node.index)
+                    node => new NodeModel(node.x, node.y, node.label, node.overview, node.description, node.color, node.index)
                 );
                 this.edges = graphData.edges.map(
                     edge => new EdgeModel(edge.nodeA, edge.nodeB, edge.connection)

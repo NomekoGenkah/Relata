@@ -1,6 +1,7 @@
 const canvas = document.getElementById('nodeCanvas');
 const ctx = canvas.getContext('2d');
 const renameInput = document.getElementById('renameInput');
+const colorPicker = document.getElementById("colorPicker");
 const {ipcRenderer} = require('electron');
 const {GraphModel} = require('./model.js');
 const {selectEdge} = require('./edgeAux.js');
@@ -8,8 +9,8 @@ const {selectNode} = require('./nodeAux.js');
 
 model = new GraphModel();
 
-model.addNode(200, 200, "sd", "23", model.nodes.length);
-model.addNode(250, 121, "sdsd", "asd23", model.nodes.length);
+//model.addNode(200, 200, "sd", "23", model.nodes.length, "red");
+//model.addNode(250, 121, "sdsd", "asd23", model.nodes.length, "blue");
 
 let mouseX = 0;
 let mouseY = 0;
@@ -57,10 +58,10 @@ function draw() {
   model.nodes.forEach((node) => {
 
     ctx.strokeStyle = (node === selectedNode) ? 'white' : 'black';
-
     ctx.beginPath();
     ctx.arc(node.x, node.y, 50, 0, Math.PI * 2);
-    ctx.fillStyle = 'green';
+
+    ctx.fillStyle = node.color;
     ctx.fill();
     ctx.stroke();
 
@@ -215,6 +216,14 @@ renameInput.addEventListener('keydown', (event) => {
     renameInput.style.display = 'none'; // Cancel renaming on Escape
   }
 });
+
+// Update node color
+colorPicker.addEventListener("input", (event) => {
+  if (selectedNode) {
+    selectedNode.color = event.target.value;
+    draw();
+  }
+})
 
 draw();
 
