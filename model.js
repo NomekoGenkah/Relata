@@ -86,6 +86,19 @@ class GraphModel {
         }
     }
 
+    saveToJson() {
+        try {
+            const graphData = {
+                nodes: this.nodes,
+                edges: this.edges,
+            };
+            return JSON.stringify(graphData, null, 2); // Return the JSON string
+        } catch (error) {
+            console.error('Failed to serialize graph:', error);
+            return null; // Return null in case of an error
+        }
+    }
+    
     loadFromFile(filename) {
         try {
             if (fs.existsSync(filename)) {
@@ -107,6 +120,26 @@ class GraphModel {
             console.error('Failed to load graph:', error);
         }
     }
+
+    loadFromJson(jsonString) {
+        try {
+            const graphData = JSON.parse(jsonString);
+            if (Array.isArray(graphData.nodes) && Array.isArray(graphData.edges)) {
+                this.nodes = graphData.nodes.map(
+                    node => new NodeModel(node.x, node.y, node.label, node.overview, node.description, node.index)
+                );
+                this.edges = graphData.edges.map(
+                    edge => new EdgeModel(edge.nodeA, edge.nodeB, edge.connection)
+                );
+            } else {
+                throw new Error('Invalid graph data format');
+            }
+        } catch (error) {
+            console.error('Failed to load graph from JSON:', error);
+        }
+    }
+    
+
 }
 
 module.exports = { NodeModel, EdgeModel, GraphModel };

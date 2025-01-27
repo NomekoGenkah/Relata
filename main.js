@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, Menu, dialog} = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -37,6 +37,28 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
+
+  const menu = Menu.buildFromTemplate([
+    {
+      label: 'File',
+      submenu: [
+        {
+          label: 'Save',
+          click: () => {
+            saveFile();
+          },
+        },
+        {
+          label: 'Load',
+          click: () => {
+            loadFile();
+          },
+        },
+      ],
+    },
+  ]);
+
+  Menu.setApplicationMenu(menu);
 });
 
 // Quit the app when all windows are closed (except on macOS)
@@ -46,36 +68,33 @@ app.on('window-all-closed', () => {
   }
 });
 
-/*
-
-ipcMain.handle('saveGraph', async (event, graphData) => {
-  const { filePath } = await dialog.showSaveDialog({
-      title: 'Save Graph',
-      defaultPath: 'graph.json',
-      filters: [{ name: 'JSON Files', extensions: ['json'] }],
+// Save function
+function saveFile() {
+  dialog.showSaveDialog(win, {
+    title: 'Save File',
+    defaultPath: 'data.json',
+    filters: [{ name: 'JSON Files', extensions: ['json'] }],
+  }).then((file) => {
+    if (!file.canceled) {
+      win.webContents.send('request-data'); // Ask renderer process for data
+      // Listen for data from renderer
+      const { ipcMain } = require('electron');
+      ipcMain.once('send-data', (event, data) => {
+        fs.writeFileSync(file.filePath.toString(), JSON.stringify(data, null, 2));
+      });
+    }
   });
+}
 
-  if (filePath) {
-      fs.writeFileSync(filePath, JSON.stringify(graphData, null, 2), 'utf-8');
-      return filePath;
-  }
-
-  throw new Error('File save canceled');
-});
-
-// Load Graph Handler
-ipcMain.handle('loadGraph', async () => {
-  const { filePaths } = await dialog.showOpenDialog({
-      title: 'Load Graph',
-      filters: [{ name: 'JSON Files', extensions: ['json'] }],
+// Load function
+function loadFile() {
+  dialog.showOpenDialog(win, {
+    title: 'Load File',
+    filters: [{ name: 'JSON Files', extensions: ['json'] }],
+  }).then((file) => {
+    if (!file.canceled) {
+      const data = JSON.parse(fs.readFileSync(file.filePaths[0]));
+      win.webContents.send('load-data', data); // Send data to renderer
+    }
   });
-
-  if (filePaths && filePaths[0]) {
-      const graphData = JSON.parse(fs.readFileSync(filePaths[0], 'utf-8'));
-      return graphData;
-  }
-
-  throw new Error('File load canceled');
-});
-
-*/
+}

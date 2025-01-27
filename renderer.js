@@ -1,6 +1,7 @@
 const canvas = document.getElementById('nodeCanvas');
 const ctx = canvas.getContext('2d');
 const renameInput = document.getElementById('renameInput');
+const {ipcRenderer} = require('electron');
 const {GraphModel} = require('./model.js');
 const {selectEdge} = require('./edgeAux.js');
 const {selectNode} = require('./nodeAux.js');
@@ -24,6 +25,17 @@ let secondNode = null; //used for creating edges
 let draggingNode = null; // Node being dragged
 let offsetX, offsetY; // Offset for positioning the node during drag
 
+ipcRenderer.on('request-data', () =>{
+  let data = model.saveToJson();
+  console.log("data to save: ", data);
+  ipcRenderer.send('send-data', data);
+});
+
+ipcRenderer.on('load-data', (event, data) =>{
+  model.loadFromJson(data);
+  console.log('loaded data:', data);
+  draw();
+});
 
 // Draw nodes and edges
 function draw() {
@@ -154,7 +166,7 @@ document.addEventListener('keydown', (event) => {
     }
   }
 
-  if(event.key === 'r' && !renameBool){
+  if(event.key === 'r' && !renameBool && !isCtrl){
     renameBool = true;
     renameInput.style.display = 'block';
     renameInput.style.left = `${selectedNode.x}px`;
