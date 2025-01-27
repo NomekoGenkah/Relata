@@ -3,8 +3,12 @@ const ctx = canvas.getContext('2d');
 const renameInput = document.getElementById('renameInput');
 const {GraphModel} = require('./model.js');
 const {selectEdge} = require('./edgeAux.js');
+const {selectNode} = require('./nodeAux.js');
 
 model = new GraphModel();
+
+model.addNode(200, 200, "sd", "23", model.nodes.length);
+model.addNode(250, 121, "sdsd", "asd23", model.nodes.length);
 
 let mouseX = 0;
 let mouseY = 0;
@@ -60,9 +64,6 @@ canvas.addEventListener('mousemove', (event) => {
 
   mouseX = event.offsetX;
   mouseY = event.offsetY;
-  //console.log("x: " + mouseX + " y: " + mouseY);
-
-
 
   if(draggingNode){
     // Update the node's position while dragging
@@ -78,37 +79,25 @@ canvas.addEventListener('mousemove', (event) => {
 
 // Detect clicking on a node   //NEED FIXING LATER
 canvas.addEventListener('mousedown', (event) => {
-  selectedNode = null;
+  //selectedNode = null;
   selectedEdge = null;
 
-  model.nodes.forEach((node) => {
-    const dist = Math.sqrt((mouseX - node.x) ** 2 + (mouseY - node.y) ** 2);
-    //console.log("distance: " + dist);
-    if (dist < 40) {
-      selectedNode = node; // Store the clicked node as selected
+  selectedNode = selectNode(mouseX, mouseY, model.nodes);
 
-      draggingNode = node;
-      offsetX = mouseX - node.x;
-      offsetY = mouseY - node.y;
-    }
-  });
-
-  if(!selectedNode){
+  if(selectedNode){
+    draggingNode = selectedNode;
+    offsetX = mouseX - selectedNode.x;
+    offsetY = mouseY - selectedNode.y;
+  }else{
     selectedEdge = selectEdge(mouseX, mouseY, model.edges, model.nodes);
   }
-  draw();
 
+  draw();
 });
 
-
-model.addNode(200, 200, "sd", "23", model.nodes.length);
-model.addNode(250, 121, "sdsd", "asd23", model.nodes.length);
-
-//adding edges selectig nodes selecting edges    use of index vs node itself  CHANGE
+// this for creating edges
 canvas.addEventListener('click', (event) => {
   console.log("click");
-  //selectedNode = null;
-  //selectedEdge = null;
 
   if(selectedNode === secondNode || !isCtrl){return}
 
@@ -130,26 +119,21 @@ canvas.addEventListener('click', (event) => {
   }
 
   //selecting edges
-
 });
 
 canvas.addEventListener('mouseup', () => {
   draggingNode = null; // Stop dragging when the mouse is released
 });
 
-//add node when n
+//different keys
 document.addEventListener('keydown', (event) => {
   if (event.key === 'n' && !renameBool) {
     x = event.offsetX - offsetX;
     y = event.offsetY - offsetY;
 
-  //  x = Math.random() * canvas.width,
-  //  y = Math.random() * canvas.height,
     label = 'Node ' + (model.nodes.length + 1),
 
     model.addNode(mouseX, mouseY, label, '', '');
-    //console.log(model.nodes.length);
-    //console.log(model.nodes[model.nodes.length - 1]);
   }
 
   if(event.key === 's' && !renameBool){
@@ -177,6 +161,7 @@ document.addEventListener('keydown', (event) => {
     renameInput.style.top = `${selectedNode.y}px`;
     renameInput.value = selectedNode.label;
     renameInput.focus();
+    //renameInput.value = "";
   }
 
   if(event.key === 'Control' ){

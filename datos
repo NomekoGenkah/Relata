@@ -1,29 +1,87 @@
 {
   "nodes": [
     {
-      "x": 154,
-      "y": 210,
-      "label": "sdr",
+      "x": 94,
+      "y": 392,
+      "label": "mate 1",
       "overview": 0,
       "description": "23",
       "index": 0
     },
     {
-      "x": 464,
-      "y": 201,
-      "label": "svx",
+      "x": 733,
+      "y": 211,
+      "label": "economia",
       "overview": 1,
       "description": "asd23",
       "index": 1
     },
     {
-      "x": 294,
-      "y": 330,
-      "label": "caca",
+      "x": 244,
+      "y": 396,
+      "label": "mate 2",
       "overview": "",
       "description": "",
       "index": 2
+    },
+    {
+      "x": 409,
+      "y": 401,
+      "label": "mate 3",
+      "overview": "",
+      "description": "",
+      "index": 3
+    },
+    {
+      "x": 605,
+      "y": 399,
+      "label": "mate 4",
+      "overview": "",
+      "description": "",
+      "index": 4
+    },
+    {
+      "x": 87,
+      "y": 540,
+      "label": "ingles",
+      "overview": "",
+      "description": "",
+      "index": 5
+    },
+    {
+      "x": 739,
+      "y": 534,
+      "label": "ingles 2",
+      "overview": "",
+      "description": "",
+      "index": 6
     }
   ],
-  "edges": []
+  "edges": [
+    {
+      "nodeA": 2,
+      "nodeB": 0,
+      "connection": ""
+    },
+    {
+      "nodeA": 2,
+      "nodeB": 3,
+      "connection": ""
+    },
+    {
+      "nodeA": 4,
+      "nodeB": 3,
+      "connection": ""
+    },
+    {
+      "nodeA": 1,
+      "nodeB": 3,
+      "connection": ""
+    },
+    {
+      "nodeA": 6,
+      "nodeB": 5,
+      "connection": ""
+    }
+  ]
 }
