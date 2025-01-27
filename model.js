@@ -12,6 +12,14 @@ class NodeModel {
     }
 }
 
+class viewPortModel{
+    constructor(x = 0, y = 0, scale = 1){
+        this.x = x;
+        this.y = y;
+        this.scale = scale;
+    }
+}
+
 class EdgeModel {
     constructor(nodeA, nodeB, connection = '') {
         this.nodeA = nodeA;
@@ -143,4 +151,4 @@ class GraphModel {
 
 }
 
-module.exports = { NodeModel, EdgeModel, GraphModel };
+module.exports = { NodeModel, EdgeModel, GraphModel, viewPortModel };
