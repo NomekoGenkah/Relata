@@ -10,6 +10,8 @@ class NodeModel {
         this.color = color;
         this.size = size;
         this.index = index;
+        this.childGraphFile = null;
+        this.childGraph = null;
     }
 }
 
@@ -31,8 +33,10 @@ class EdgeModel {
 
 class GraphModel {
     constructor() {
+        this.name = '';
         this.nodes = [];
         this.edges = [];
+        this.parentGraph = null;
     }
 
     addNode(x, y, label, description = '', overview = '', color, size = 50, index = this.nodes.length) {
@@ -55,9 +59,7 @@ class GraphModel {
             if (edge.nodeA > nodeIndex) edge.nodeA--;
             if (edge.nodeB > nodeIndex) edge.nodeB--;
         });
-    }
-    
-      
+    }      
 
     addEdge(nodeA, nodeB, connection = '') {
         const newEdge = new EdgeModel(nodeA, nodeB, connection);
@@ -102,18 +104,7 @@ class GraphModel {
         if(node.size > 150) node.size = 150;
     }
 
-    saveToFile(filename) {
-        try {
-            const graphData = {
-                nodes: this.nodes,
-                edges: this.edges,
-            };
-            fs.writeFileSync(filename, JSON.stringify(graphData, null, 2), 'utf-8');
-        } catch (error) {
-            console.error('Failed to save graph:', error);
-        }
-    }
-
+    /*
     saveToJson() {
         try {
             const graphData = {
@@ -126,28 +117,62 @@ class GraphModel {
             return null; // Return null in case of an error
         }
     }
-    
-    loadFromFile(filename) {
+    */
+
+    saveToJson() {
+        let parentGraph = (this.parentGraph) ? this.parentGraph.name : null;
         try {
-            if (fs.existsSync(filename)) {
-                const graphData = JSON.parse(fs.readFileSync(filename, 'utf-8'));
-                if (Array.isArray(graphData.nodes) && Array.isArray(graphData.edges)) {
-                    this.nodes = graphData.nodes.map(
-                        node => new NodeModel(node.x, node.y, node.label, node.overview, node.description, node.color, node.index)
-                    );
-                    this.edges = graphData.edges.map(
-                        edge => new EdgeModel(edge.nodeA, edge.nodeB, edge.connection)
-                    );
-                } else {
-                    throw new Error('Invalid graph data format');
-                }
-            } else {
-                throw new Error('File does not exist');
-            }
+            const graphData = {
+                name : this.name,
+                nodes: this.nodes.map((node) => ({
+                    x: node.x,
+                    y: node.y,
+                    label: node.label,
+                    overview: node.overview,
+                    description: node.description,
+                    color: node.color,
+                    size: node.size,
+                    index: node.index,
+                    childGraphFile: node.childGraphFile,
+                })),
+                edges: this.edges,
+                parentGraph: parentGraph, 
+            };
+            return JSON.stringify(graphData, null, 2);
         } catch (error) {
-            console.error('Failed to load graph:', error);
+            console.error('Failed to serialize graph:', error);
+            return null;
         }
     }
+/*
+    saveAllToJson(graph, basePath = './') {
+        try {
+            // Determine the file name
+            const fileName = `${sanitizeFilename(graph.parentNode?.label || 'main')}.json`;
+            const filePath = path.join(basePath, fileName);
+
+            // Save the current graph
+            const graphData = graph.saveToJson();
+            if (graphData) {
+                fs.writeFileSync(filePath, graphData, 'utf-8');
+                console.log(`Graph saved to: ${filePath}`);
+            }
+
+            // Save child graphs recursively
+            for (let node of graph.nodes) {
+                if (node.childGraph) {
+                    node.childGraphFile = `${sanitizeFilename(node.label)}.json`; // Assign filename
+                    this.saveAllToJson(node.childGraph, basePath); // Save the child graph
+                    node.childGraph = null; // Clear in-memory reference
+                }
+            }
+        } catch (error) {
+            console.error('Failed to save all graphs:', error);
+        }
+    }
+*/
+
+    
 
     loadFromJson(jsonString) {
         try {
@@ -168,6 +193,11 @@ class GraphModel {
     }
     
 
+}
+
+// Helper function for safe filenames
+function sanitizeFilename(filename) {
+    return filename.replace(/[^a-z0-9]/gi, '_').toLowerCase();
 }
 
 module.exports = { NodeModel, EdgeModel, GraphModel, viewPortModel };

@@ -32,13 +32,27 @@ let startX, startY;
 
 ipcRenderer.on('request-data', () =>{
   let data = model.saveToJson();
-  console.log("data to save: ", data);
+  console.log('data to save:');
+  console.log(data);
   ipcRenderer.send('send-data', data);
 });
 
+// Listen for the 'save-complete' event
+ipcRenderer.on('save-complete', (event, { success, filePath }) => {
+  if (success) {
+    console.log(`File saved successfully at: ${filePath}`);
+    // You can also update the UI or inform the user of the file save completion
+    alert(`File saved successfully at: ${filePath}`);
+  } else {
+    console.error('Failed to save the file.');
+  }
+});
+
+
 ipcRenderer.on('load-data', (event, data) =>{
   model.loadFromJson(data);
-  console.log('loaded data:', data);
+  console.log('loaded data:');
+  console.log(data);
   draw();
 });
 
@@ -204,6 +218,73 @@ document.addEventListener('keydown', (event) => {
     }else{
       colorPicker.style.display = 'block';
     }
+  }
+
+  if(event.key == 'm' && !renameBool && selectedNode){
+
+    //node : child graph
+    //node : child graph json filename
+    //graph : parent graph DONE
+    //graph : name
+
+
+    //if the node does not have a child create one
+    if(!selectedNode.childGraph){
+      //create new graph
+      let newModel = new GraphModel();
+      newModel.name = selectedNode.label;
+      selectedNode.childGraphFile = newModel.name;
+
+      //reference in node
+      selectedNode.childGraph = newModel;
+      
+      //set the reference to go back
+      newModel.parentGraph = model;
+    //  console.log(newModel.parentGraph.name);
+    //  console.log(newModel.parentGraph);
+
+      //load new graph
+      model = newModel;
+
+
+      //if(model.name === ''){
+      //  model.name = 'main';
+      //}
+
+      //newModel.name = selectNode.label;
+
+
+      //selectedNode.parentGraph = model;
+
+      //new model, child of current node
+      //let newModel = new GraphModel();
+  
+      //reference to current node to go back
+      //newModel.parentNode = selectedNode;
+  
+      // assing new model to current node
+      //selectedNode.childGraph = newModel;
+  
+    }else{
+      //will have to load from json eventually
+      model = selectedNode.childGraph;
+      selectedNode = null;
+    }
+
+    //changing graph
+    //model = selectedNode.childGraph;
+
+    draw();
+
+  }
+
+  if(event.key == 'k' && !renameBool){
+    //console.log(model.parentNode);
+    let parentModel = model.parentGraph;
+    //let oldModel = model.parentNode.parentGraph;
+    model = parentModel;
+    draw();
+
   }
 
   if(event.key === 'Control'){
