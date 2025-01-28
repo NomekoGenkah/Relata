@@ -73,6 +73,28 @@ canvas.addEventListener('mousedown', (event) => {
   draw();
 });
 
+canvas.addEventListener("dblclick", (event) => {
+  if(selectedNode){
+    // Open the overview panel
+    document.getElementById("overviewPanel").classList.add("visible");
+
+    // Fill the editable div with the node's description
+    document.getElementById("nodeDescription").innerText = selectedNode.description || '';    
+
+
+    // Allow editing the description
+    document.getElementById("nodeDescription").addEventListener("input", (e) => {
+      selectedNode.description = e.target.innerText;  // Save to node object when edited
+    });
+
+    // When the close button is clicked, hide the panel
+    document.getElementById("closeOverview").addEventListener("click", () => {
+      document.getElementById("overviewPanel").classList.remove("visible");
+    });
+
+  }
+});
+
 //keeping track of mouse
 canvas.addEventListener('mousemove', (event) => {
   const {x, y} = getMousePos(event);
@@ -111,10 +133,8 @@ canvas.addEventListener("wheel", (event) => {
 
   if (event.deltaY < 0) {
     viewport.scale = Math.min(viewport.scale * zoomFactor, maxScale);
-    //viewport.scale *= zoomFactor;
   } else {
     viewport.scale = Math.max(viewport.scale / zoomFactor, minScale);
-    //viewport.scale /= zoomFactor;
   }
 
   viewport.x = mouseXWorld - (event.clientX - canvas.getBoundingClientRect().left) / viewport.scale;
