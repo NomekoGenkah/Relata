@@ -1,14 +1,15 @@
 const fs = require('fs');
 
 class NodeModel {
-    constructor(x, y, label = '', overview = '', description = '', color = 'green', index){
+    constructor(x, y, label = '', overview = '', description = '', color = 'green', size = 50, index){
         this.x = x;
         this.y = y;
         this.label = label;
         this.overview = overview;
         this.description = description;
-        this.index = index;
         this.color = color;
+        this.size = size;
+        this.index = index;
     }
 }
 
@@ -34,8 +35,8 @@ class GraphModel {
         this.edges = [];
     }
 
-    addNode(x, y, label, description = '', overview = '', color, index = this.nodes.length) {
-        const newNode = new NodeModel(x, y, label, overview, description, color, index);
+    addNode(x, y, label, description = '', overview = '', color, size = 50, index = this.nodes.length) {
+        const newNode = new NodeModel(x, y, label, overview, description, color, size, index);
         this.nodes.push(newNode);
     }
 
@@ -63,6 +64,18 @@ class GraphModel {
         this.edges.push(newEdge);
     }
 
+    findEdge(nodeA, nodeB){
+        for(let edge of this.edges){
+            if(edge.nodeA === nodeA && edge.nodeB === nodeB){
+                return true;
+            }
+            if(edge.nodeA === nodeB && edge.nodeB === nodeA){
+                return true;
+            }
+        }
+        return false;
+    }
+
     removeEdge(nodeAIndex, nodeBIndex) {
 
         // Filter out the edge that connects the specified nodes
@@ -81,6 +94,12 @@ class GraphModel {
         } else {
             throw new Error('Invalid node index');
         }
+    }
+
+    changeNodeSize(node, change){
+        node.size += change;
+        if(node.size < 10) node.size = 10;
+        if(node.size > 150) node.size = 150;
     }
 
     saveToFile(filename) {

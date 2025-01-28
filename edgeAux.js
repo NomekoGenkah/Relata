@@ -1,7 +1,7 @@
 //Edge aux
 
 function selectEdge(mouseX, mouseY, edges, nodes) {
-    const threshold = 7; // Pixels within which an edge is considered "selected"
+    const threshold = 4; // Pixels within which an edge is considered "selected"
     let selectedEdge = null;
 
     edges.forEach(edge => {

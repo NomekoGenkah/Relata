@@ -125,21 +125,18 @@ canvas.addEventListener("wheel", (event) => {
 
 // this for creating edges
 canvas.addEventListener('click', (event) => {
-  const {x, y} = getMousePos(event);
-
+  
   if(selectedNode && isCtrl){
     if(secondNode === null){
       secondNode = selectedNode;
-    }else if(secondNode != selectedNode){
-      model.addEdge(secondNode.index, selectedNode.index, '');
+    }else if(secondNode != selectedNode && !model.findEdge(selectedNode.index, secondNode.index)){
+      model.addEdge(selectedNode.index, secondNode.index, '');
       //selectedNode = null;
       secondNode = null;
 
       draw();
     }
   }
-
-  console.log("click");
 });
 
 //different keys
@@ -192,6 +189,17 @@ document.addEventListener('keydown', (event) => {
   if(event.key === 'Control'){
     isCtrl = true;
   }
+
+  if(event.key === '+' && selectedNode && !renameBool){
+    model.changeNodeSize(selectedNode, 10);
+    draw();
+  }
+
+  if(event.key === '-' && selectedNode && !renameBool){
+    model.changeNodeSize(selectedNode, -10);
+    draw();
+  }
+
 });
 
 document.addEventListener('keyup', (event) =>{
@@ -247,6 +255,7 @@ function draw() {
     const nodeB = model.nodes[edge.nodeB];
 
     ctx.strokeStyle = 'black';
+    ctx.strokeStyle = (edge === selectedEdge) ? '#FFFAFA' : 'black';
 
     ctx.beginPath();
     ctx.moveTo(nodeA.x, nodeA.y);
@@ -257,9 +266,9 @@ function draw() {
   model.nodes.forEach((node) => {
 
     ctx.strokeStyle = (node === selectedNode) ? '#FFFAFA' : 'black';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = (node === selectedNode) ? 5 : 2;
     ctx.beginPath();
-    ctx.arc(node.x, node.y, 50, 0, Math.PI * 2);
+    ctx.arc(node.x, node.y, node.size, 0, Math.PI * 2);
 
     ctx.fillStyle = node.color;
     ctx.fill();
