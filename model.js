@@ -1,5 +1,3 @@
-const fs = require('fs');
-
 class NodeModel {
     constructor(x, y, label = '', overview = '', description = '', color = 'green', size = 50, index){
         this.x = x;
@@ -10,7 +8,6 @@ class NodeModel {
         this.color = color;
         this.size = size;
         this.index = index;
-        this.childGraphFile = null;
         this.childGraph = null;
     }
 }
@@ -33,7 +30,6 @@ class EdgeModel {
 
 class GraphModel {
     constructor() {
-        this.name = '';
         this.nodes = [];
         this.edges = [];
         this.parentGraph = null;
@@ -94,7 +90,8 @@ class GraphModel {
             node.x = x;
             node.y = y;
         } else {
-            throw new Error('Invalid node index');
+         //   throw new Error('Invalid node index');
+            throw new Error(`Node with index ${nodeIndex} does not exist.`);
         }
     }
 
@@ -104,86 +101,41 @@ class GraphModel {
         if(node.size > 150) node.size = 150;
     }
 
-    /*
     saveToJson() {
-        try {
-            const graphData = {
-                nodes: this.nodes,
-                edges: this.edges,
-            };
-            return JSON.stringify(graphData, null, 2); // Return the JSON string
-        } catch (error) {
-            console.error('Failed to serialize graph:', error);
-            return null; // Return null in case of an error
-        }
+        //x, y, label = '', overview = '', description = '', color = 'green', size = 50, index
+        return JSON.stringify(this, (key, value) => {
+            // Exclude circular references like parentGraph
+            if (key === 'parentGraph') return undefined;
+            return value;
+        }, 2);
     }
-    */
 
-    saveToJson() {
-        let parentGraph = (this.parentGraph) ? this.parentGraph.name : null;
+    loadFromJson(data) {
         try {
-            const graphData = {
-                name : this.name,
-                nodes: this.nodes.map((node) => ({
-                    x: node.x,
-                    y: node.y,
-                    label: node.label,
-                    overview: node.overview,
-                    description: node.description,
-                    color: node.color,
-                    size: node.size,
-                    index: node.index,
-                    childGraphFile: node.childGraphFile,
-                })),
-                edges: this.edges,
-                parentGraph: parentGraph, 
-            };
-            return JSON.stringify(graphData, null, 2);
-        } catch (error) {
-            console.error('Failed to serialize graph:', error);
-            return null;
-        }
-    }
-/*
-    saveAllToJson(graph, basePath = './') {
-        try {
-            // Determine the file name
-            const fileName = `${sanitizeFilename(graph.parentNode?.label || 'main')}.json`;
-            const filePath = path.join(basePath, fileName);
-
-            // Save the current graph
-            const graphData = graph.saveToJson();
-            if (graphData) {
-                fs.writeFileSync(filePath, graphData, 'utf-8');
-                console.log(`Graph saved to: ${filePath}`);
-            }
-
-            // Save child graphs recursively
-            for (let node of graph.nodes) {
-                if (node.childGraph) {
-                    node.childGraphFile = `${sanitizeFilename(node.label)}.json`; // Assign filename
-                    this.saveAllToJson(node.childGraph, basePath); // Save the child graph
-                    node.childGraph = null; // Clear in-memory reference
-                }
-            }
-        } catch (error) {
-            console.error('Failed to save all graphs:', error);
-        }
-    }
-*/
-
+            const graphData = JSON.parse(data);
     
-
-    loadFromJson(jsonString) {
-        try {
-            const graphData = JSON.parse(jsonString);
             if (Array.isArray(graphData.nodes) && Array.isArray(graphData.edges)) {
-                this.nodes = graphData.nodes.map(
-                    node => new NodeModel(node.x, node.y, node.label, node.overview, node.description, node.color, node.index)
-                );
-                this.edges = graphData.edges.map(
-                    edge => new EdgeModel(edge.nodeA, edge.nodeB, edge.connection)
-                );
+                this.nodes = graphData.nodes.map((node, index) => {
+                    const loadedNode = new NodeModel(
+                        node.x,
+                        node.y,
+                        node.label,
+                        node.overview,
+                        node.description,
+                        node.color,
+                        node.size,
+                        node.index,
+                    );
+                    if (node.childGraph) {
+                        const childGraph = new GraphModel();
+                        childGraph.loadFromJson(JSON.stringify(node.childGraph)); // Load the child graph recursively
+                        childGraph.parentGraph = this; // Set parentGraph reference
+                        loadedNode.childGraph = childGraph;
+                    }
+                    return loadedNode;
+                });
+    
+                this.edges = graphData.edges.map(edge => new EdgeModel(edge.nodeA, edge.nodeB, edge.connection));
             } else {
                 throw new Error('Invalid graph data format');
             }
@@ -192,7 +144,6 @@ class GraphModel {
         }
     }
     
-
 }
 
 // Helper function for safe filenames
