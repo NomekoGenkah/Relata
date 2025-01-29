@@ -38,14 +38,14 @@
         top: 0;
         right: 0;
         width: 300px;
-
-        height: 100vh;
+        height: 2500px;
         background-color: aliceblue;
-        border-left: 0px solid #000;
+        border-left: 2px solid #000;
         padding: 20px;
         box-sizing: border-box;
         display: none;
         z-index: 20;
+        overflow: auto;
       }
 
       #overviewPanel.visible {
@@ -60,6 +60,7 @@
         background: #f9f9f9;
         box-sizing: border-box;
         resize: both;
+        overflow: auto;
       } 
 
       #closeOverview {
@@ -88,7 +89,7 @@
       <button id="closeOverview">Close</button>
     </div>
 
-    <canvas id="nodeCanvas" width="1280" height="720"></canvas>
+    <canvas id="nodeCanvas" width="3000" height="2500"></canvas>
     
 
     <script src="renderer.js"></script>
