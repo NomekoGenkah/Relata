@@ -34,6 +34,8 @@ let offsetX, offsetY; // Offset for positioning the node during drag
 let isPanning = false;
 let startX, startY;
 
+let isWriting = false;
+
 
 
 ipcRenderer.on('request-data', () => {

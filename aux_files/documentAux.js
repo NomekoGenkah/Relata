@@ -10,7 +10,7 @@ function addDocumentListeners(){
     document.addEventListener('keydown', (event) => {
         // n new r rename d delete p pan control control
     
-        if(event.key === 'r' && !renameBool && selectedNode){
+        if(event.key === 'r' && !renameBool && selectedNode && !isWriting){
         renameBool = true;
     
         const rect = canvas.getBoundingClientRect();
@@ -24,12 +24,12 @@ function addDocumentListeners(){
         renameInput.focus();
         }
     
-        if(event.key === 'n' && !renameBool){
+        if(event.key === 'n' && !renameBool && !isWriting){
         model.addNode(mouseX, mouseY, 'Node ' + (model.nodes.length + 1), '', '');
         draw();
         }
     
-        if(event.key === 'd' && !renameBool){
+        if(event.key === 'd' && !renameBool && !isWriting){
         if(selectedNode){
             model.removeNode(selectedNode.index);
             selectedNode = null; 
@@ -40,11 +40,11 @@ function addDocumentListeners(){
         draw();
         }
     
-        if(event.key === 'p' && !renameBool) {
+        if(event.key === 'p' && !renameBool && !isWriting) {
         isPanning = !isPanning;
         }
     
-        if(event.key === 'c' && !renameBool && selectedNode){
+        if(event.key === 'c' && !renameBool && selectedNode && !isWriting){
     
         if(colorPicker.style.display === 'block'){
             colorPicker.style.display = 'none';
@@ -53,7 +53,7 @@ function addDocumentListeners(){
         }
         }
     
-        if(event.key == 'm' && !renameBool && selectedNode){
+        if(event.key == 'm' && !renameBool && selectedNode && !isWriting){
     
         if(!selectedNode.childGraph){
     
@@ -72,7 +72,7 @@ function addDocumentListeners(){
         draw();
         }
     
-        if(event.key == 'k' && !renameBool){
+        if(event.key == 'k' && !renameBool && !isWriting){
         if(model.parentGraph){
             model = model.parentGraph;
             selectedNode = null;
@@ -86,21 +86,21 @@ function addDocumentListeners(){
         isCtrl = true;
         }
     
-        if(event.key === '+' && selectedNode && !renameBool){
+        if(event.key === '+' && selectedNode && !renameBool && !isWriting){
         model.changeNodeSize(selectedNode, 10);
         draw();
         }
     
-        if(event.key === '-' && selectedNode && !renameBool){
+        if(event.key === '-' && selectedNode && !renameBool && !isWriting){
         model.changeNodeSize(selectedNode, -10);
         draw();
         }
 
-        if(event.key === 'z' && selectedNode && !renameBool && isCtrl){
+        if(event.key === 'z' && selectedNode && !renameBool && isCtrl && !isWriting){
             copyNode = selectedNode;
         }
 
-        if(event.key === 'v' && copyNode && !renameBool && isCtrl){
+        if(event.key === 'v' && copyNode && !renameBool && isCtrl && !isWriting){
             model.addNode(mouseX, mouseY, copyNode.label, copyNode.description, copyNode.overview, copyNode.childGraph);
 
             console.log("copiado?")

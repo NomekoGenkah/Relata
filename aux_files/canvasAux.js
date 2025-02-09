@@ -7,6 +7,7 @@ function addCanvasListeners(){
 
     canvas.addEventListener("dblclick", (event) => {
         if(selectedNode){
+          isWriting = true;
           // Open the overview panel
           document.getElementById("overviewPanel").classList.add("visible");
       
@@ -21,6 +22,7 @@ function addCanvasListeners(){
           // When the close button is clicked, hide the panel
           document.getElementById("closeOverview").addEventListener("click", () => {
             document.getElementById("overviewPanel").classList.remove("visible");
+            isWriting = false;
           });
         }
       });
