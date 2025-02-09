@@ -64,12 +64,24 @@
       } 
 
       #closeOverview {
-      background-color: #FF6347;
-      border: none;
-      color: white;
-      padding: 5px;
-      cursor: pointer;
-    }
+        background-color: #FF6347;
+        border: none;
+        color: white;
+        padding: 5px;
+        cursor: pointer;
+      }
+
+
+      #tooltip {
+        display: none;
+        position: absolute;
+        background-color: #333;
+        color: white;
+        padding: 5px;
+        border-radius: 5px;
+        font-size: 12px;
+        z-index: 1000;
+      }
 
     </style>
   </head>
@@ -88,6 +100,8 @@
       <br>
       <button id="closeOverview">Close</button>
     </div>
+
+    <div id="tooltip" class="tooltip">This is a tooltip text!</div>
 
     <canvas id="nodeCanvas" width="3000" height="2500"></canvas>
     

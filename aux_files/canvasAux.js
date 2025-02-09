@@ -1,7 +1,8 @@
 //document aux
-
 const { ipcRenderer } = require("electron");
 const { draw } = require("./drawing");
+const {selectEdge} = require('./edgeAux.js');
+const {selectNode} = require('./nodeAux.js');
 
 function addCanvasListeners(){
 
@@ -30,9 +31,7 @@ function addCanvasListeners(){
     
     canvas.addEventListener('contextmenu', (event) =>{
       ipcRenderer.send('show-context-menu');
-      draw();
-      //event.preventDefault();
-      //menu.popup();
+      //draw();
     });
     
     
@@ -54,27 +53,38 @@ function addCanvasListeners(){
 
     // Detect clicking on a node   //NEED FIXING LATER
     canvas.addEventListener('mousedown', (event) => {
-        selectedNode = null;
-        const {x, y} = getMousePos(event);
-    
-        if(isPanning){
-            startX = x;
-            startY = y;
-        }else{
-            selectedNode = selectNode(x, y, model.nodes);
-    
-            if(selectedNode){
-                draggingNode = selectedNode;
-                offsetX = x - selectedNode.x;
-                offsetY = y - selectedNode.y;
-            }else{
-                selectedEdge = null;
-                selectedEdge = selectEdge(x, y, model.edges, model.nodes);
-            }
-        }
-        draw();
-    });
+      const {x, y} = getMousePos(event);
+      
+      selectedNode = null;
+      selectedEdge = null;
+      selectedNode = selectNode(x, y, model.nodes);
+  
+      if(selectedNode){
+        draggingNode = selectedNode;
+        offsetX = x - selectedNode.x;
+        offsetY = y - selectedNode.y;
+      }else{
+        selectedEdge = selectEdge(x, y, model.edges, model.nodes);
+        if(selectedEdge){
+          const tooltip = document.getElementById("tooltip");
+          tooltip.textContent = selectedEdge.connection;
+          // Position the tooltip near the button
+          tooltip.style.left = `${event.pageX + 10}px`;
+          tooltip.style.top = `${event.pageY + 10}px`;
 
+          // Toggle the tooltip visibility
+          tooltip.style.display = selectedEdge.connection !== '' ? 'block' : 'none';
+        }else{
+          tooltip.style.display = 'none';
+        }
+      }
+      if(!selectedEdge && !selectedNode){
+        isPanning = true;
+        startX = x;
+        startY = y;
+      }
+      draw();
+    });
 
     //keeping track of mouse
     canvas.addEventListener('mousemove', (event) => {
@@ -84,18 +94,18 @@ function addCanvasListeners(){
         mouseY = y;
 
         if(isPanning){
-        const dx = x - startX;
-        const dy = y - startY;
-        viewport.x -= dx;
-        viewport.y -= dy;
-        startX = x;
-        startY = y;
-        draw();
+          let dx = x - startX;
+          let dy = y - startY;
+          viewport.x -= dx;
+          viewport.y -= dy;
+          startX = x;
+          startY = y;
+          draw();
         }
 
-        if (draggingNode) {
-        model.moveNode(draggingNode.index, x - offsetX, y - offsetY);
-        draw();
+        if(draggingNode){
+          model.moveNode(draggingNode.index, x - offsetX, y - offsetY);
+          draw();
         }
     });
 

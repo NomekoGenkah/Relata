@@ -46,4 +46,16 @@ function isMouseNearEdge(mouseX, mouseY, x1, y1, x2, y2, threshold) {
     return distance < threshold;
 }
 
-module.exports = { selectEdge, isMouseNearEdge };
+function getXY(edge, nodes){
+    x1 = nodes[edge.nodeA].x;
+    x2 = nodes[edge.nodeB].x;
+    y1 = nodes[edge.nodeA].y;
+    y2 = nodes[edge.nodeB].y;
+
+    x = (x1 + x2) / 2
+    y = (y1 + y2) / 2
+
+    return x, y
+}
+
+module.exports = { selectEdge, isMouseNearEdge, getXY };
