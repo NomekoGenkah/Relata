@@ -1,4 +1,4 @@
-const {app, BrowserWindow, Menu, dialog} = require('electron');
+const {app, BrowserWindow, Menu, dialog, ipcMain} = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -26,6 +26,17 @@ function createWindow() {
 
   win.webContents.openDevTools();
 }
+
+ipcMain.on("show-context-menu", (event) => {
+  const menu = Menu.buildFromTemplate([
+    { label: "Option 1", click: () => console.log("Option 1 clicked") },
+    { label: "Option 2", click: () => console.log("Option 2 clicked") },
+    { type: "separator" },
+    { label: "Exit", role: "quit" }
+  ]);
+
+  menu.popup({ window: BrowserWindow.getFocusedWindow() });
+});
 
 // When the app is ready, create the window
 app.whenReady().then(() => {

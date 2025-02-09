@@ -1,5 +1,5 @@
 class NodeModel {
-    constructor(x, y, label = '', overview = '', description = '', color = 'green', size = 50, index){
+    constructor(x, y, label = '', overview = '', description = '', color = 'green', size = 50, index, childGraph = null){
         this.x = x;
         this.y = y;
         this.label = label;
@@ -8,7 +8,7 @@ class NodeModel {
         this.color = color;
         this.size = size;
         this.index = index;
-        this.childGraph = null;
+        this.childGraph = childGraph;
     }
 }
 
@@ -35,8 +35,9 @@ class GraphModel {
         this.parentGraph = null;
     }
 
-    addNode(x, y, label, description = '', overview = '', color, size = 50, index = this.nodes.length) {
-        const newNode = new NodeModel(x, y, label, overview, description, color, size, index);
+    addNode(x, y, label, description = '', overview = '',  childGraph = null, color = 'green', size = 50, index = this.nodes.length) {
+        const newNode = new NodeModel(x, y, label, overview, description, color, size, index, childGraph);
+        newNode.childGraph = childGraph;
         this.nodes.push(newNode);
     }
 

@@ -11,6 +11,7 @@ const {addCanvasListeners} = require('./aux_files/canvasAux.js');
 const {addDocumentListeners} = require('./aux_files/documentAux.js');
 const {addRenameListeners, addColorListeners} = require('./aux_files/othersAux.js');
 
+
 let model = new GraphModel();
 let viewport = new viewPortModel();
 
@@ -24,6 +25,8 @@ let selectedNode = null;
 let selectedEdge = null;
 
 let secondNode = null; //used for creating edges
+
+let copyNode = null;
 
 let draggingNode = null; // Node being dragged
 let offsetX, offsetY; // Offset for positioning the node during drag

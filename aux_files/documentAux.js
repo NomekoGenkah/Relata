@@ -1,5 +1,7 @@
 //document aux
 
+const { selectNode } = require("./nodeAux");
+
 function addDocumentListeners(){
 
 
@@ -92,6 +94,18 @@ function addDocumentListeners(){
         if(event.key === '-' && selectedNode && !renameBool){
         model.changeNodeSize(selectedNode, -10);
         draw();
+        }
+
+        if(event.key === 'z' && selectedNode && !renameBool && isCtrl){
+            copyNode = selectedNode;
+        }
+
+        if(event.key === 'v' && copyNode && !renameBool && isCtrl){
+            model.addNode(mouseX, mouseY, copyNode.label, copyNode.description, copyNode.overview, copyNode.childGraph);
+
+            console.log("copiado?")
+
+            draw();
         }
     
     });

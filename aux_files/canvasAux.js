@@ -1,5 +1,8 @@
 //document aux
 
+const { ipcRenderer } = require("electron");
+const { draw } = require("./drawing");
+
 function addCanvasListeners(){
 
     canvas.addEventListener("dblclick", (event) => {
@@ -21,6 +24,14 @@ function addCanvasListeners(){
           });
         }
       });
+    
+    
+    canvas.addEventListener('contextmenu', (event) =>{
+      ipcRenderer.send('show-context-menu');
+      draw();
+      //event.preventDefault();
+      //menu.popup();
+    });
     
     
     // this for creating edges
