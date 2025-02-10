@@ -1,15 +1,35 @@
 {
   "name": "nodegraph",
+  "productName": "Relata",
+  "author": "Genkah",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "electron-builder"
   },
   "keywords": [],
-  "author": "",
   "license": "ISC",
   "dependencies": {
-    "electron": "^34.0.1"
+  },
+  "build": {
+    "appId": "com.Genkah.Relata",
+    "files": [
+      "**/*"
+    ],
+    "win":{
+      "target": "nsis"
+    },
+    "mac":{
+      "target": "dmg"
+    },
+    "linux":{
+      "target": "AppImage"
+    }
+  },
+  "devDependencies": {
+    "electron": "^34.0.1",
+    "electron-builder": "^25.1.8"
   }
 }

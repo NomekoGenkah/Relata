@@ -29,8 +29,8 @@ function createWindow() {
 
 ipcMain.on("show-context-menu", (event) => {
   const menu = Menu.buildFromTemplate([
-    { label: "Option 1", click: () => console.log("Option 1 clicked") },
-    { label: "Option 2", click: () => console.log("Option 2 clicked") },
+    { label: "Rename", click: () => console.log("Option 1 clicked") },
+    { label: "Color", click: () => console.log("Option 2 clicked") },
     { type: "separator" },
     { label: "Exit", role: "quit" }
   ]);

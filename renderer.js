@@ -34,8 +34,6 @@ let startX, startY;
 
 let isWriting = false;
 
-
-
 ipcRenderer.on('request-data', () => {
   // Serialize the main graph to JSON
   const data = model.saveToJson();
