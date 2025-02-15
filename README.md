@@ -38,16 +38,16 @@ You can download the latest release from the [Releases](https://github.com/youru
 
 ## Hotkeys
 
-- (**n**) makes a new node
-- (**d**) deletes selected node / edge
-- (**r**) renames selected node / changes a edge's "connection"
-- (**m**) creates/opens a sub-graph for a selected node
+- (**n**) create a new node
+- (**d**) delete selected node / edge
+- (**r**) rename selected node / change a edge's "connection"
+- (**m**) create/open a sub-graph for selected node
 - (**k**) returns to the parent graph
-- (**Ctrl c**) copies the selected node
-- (**Ctrl v**) paste the selected node
-- (**+**) increase the size of a selected node
-- (**-**) decrease the size of a selected node
-- (**p**) opens color palette 
+- (**Ctrl c**) copy selected node
+- (**Ctrl v**) paste selected node
+- (**+**) increase the size of selected node
+- (**-**) decrease the size of selected node
+- (**p**) open color palette 
 
 
 ## 🐛 Known Issues
