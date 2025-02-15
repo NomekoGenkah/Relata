@@ -5,6 +5,12 @@
 ## 🚀 Version 1.0.0 Release
 **Relata** (v1.0.0) releases with all intended core functionalities and most (known) bugs fixed
 
+![Main Graph - Windows](main-graph.png)
+![Main Graph - Zoom out](zoom-out.png)
+![Child Graph of a node](child-child-graph.png)
+![Child Graph of a node of a node](child3.png)
+
+
 
 ## ⚠️ Security Disclaimer
 
